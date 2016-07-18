@@ -1,5 +1,5 @@
 # reactReduxApp
-## for initial setup - ```javascript npm install```
-## for runing server - ```javascript npm start -s```
+```javascript npm install``` ## for initial setup
+```javascript npm start -s``` ## for runing server
 
 ### **Description**
