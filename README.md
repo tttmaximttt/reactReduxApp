@@ -4,7 +4,7 @@
 ``` 
   npm install
 ```
-run server :arrow_down:
+## run server :arrow_down:
 ``` 
   npm start -s 
 ```
