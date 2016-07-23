@@ -7,7 +7,7 @@ const SelectInput = ({
   defaultOptions,
   value,
   error,
-  options
+  options = []
 }) => {
   let SelectInput = 'form-group';
 

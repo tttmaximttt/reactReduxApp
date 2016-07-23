@@ -3,14 +3,16 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseForm from './courseForm';
+import toastr from 'toastr';
 
-class courseManagePage extends Component {
+export class ManageCoursePage extends Component {
   constructor(props, context){
     super(props, context);
 
     this.state = {
       course: Object.assign({}, this.props.course),
-      errors: {}
+      errors: {},
+      saving: false
     };
 
     this.updateCourseState = this.updateCourseState.bind(this);
@@ -30,10 +32,39 @@ class courseManagePage extends Component {
     return this.setState({course: course});
   }
 
+  redirect(){
+    this.setState({saving: false});
+    toastr.success('Course saved!');
+    this.context.router.push('/courses');
+  }
+
+  courseFormValid(){
+    let formIsValid = true;
+    let errors = {};
+
+    if (this.state.course.title.length < 5) {
+      errors.title = 'Title must be at least 5 characters.';
+      formIsValid = false;
+    }
+
+    this.setState({ errors });
+    return formIsValid;
+  }
+
   saveCourse(event){
     event.preventDefault();
-    this.props.actions.saveCourse(this.state.course);
-    this.context.router.push('/courses');
+
+    if (!this.courseFormValid()){
+      return;
+    }
+
+    this.setState({saving: true});
+    this.props.actions.saveCourse(this.state.course)
+      .then(() => this.redirect())
+      .catch((error) => {
+        toastr.error(error);
+        this.setState({saving: false});
+      });
   }
 
 	render() {
@@ -45,19 +76,20 @@ class courseManagePage extends Component {
           onChange={this.updateCourseState}
           onSave={this.saveCourse}
           errors={this.state.errors}
+          saving={this.state.saving}
         />
       </div>
 		);
 	}
 }
 
-courseManagePage.propTypes = {
+ManageCoursePage.propTypes = {
   course: PropTypes.object.isRequire,
   actions: PropTypes.array.isRequire,
   authors: PropTypes.array.isRequire
 };
 
-courseManagePage.contextTypes = {
+ManageCoursePage.contextTypes = {
   router: PropTypes.object
 };
 
@@ -103,4 +135,4 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(courseManagePage);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageCoursePage);
