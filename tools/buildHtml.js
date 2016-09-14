@@ -1,6 +1,5 @@
 import fs from 'fs';
 import cheerio from 'cheerio';
-import React from 'react';
 import colors from 'colors';
 
 /*eslint-disable no-console*/
@@ -13,7 +12,7 @@ fs.readFile('src/index.html', 'utf-8', (err, markup) => {
 
   const $ = cheerio.load(markup);
 
-  $('head').prepend(<link rel="stylesheet" href="styles.css"/>);
+  $('head').prepend('<link rel="stylesheet" href="styles.css"/>');
 
   fs.writeFile('dist/index.html', $.html(), (err) => {
     if (err) {
